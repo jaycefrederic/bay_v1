@@ -60,7 +60,7 @@ class Level():
         for moving_platform in self.moving_platform_group:
             moving_platform.check_collision(self.player)
 
-    def shift_world(self, shift_x):
+    def shift_world(self, shift_x):  # sourcery skip: extract-duplicate-method
         # bc it's actually a side-scroller, we're scrollin
         self.world_shift += (shift_x*0.6) # keep track of world shift
         # adjusting platform and enemy sprite lists to match the scroll
@@ -68,10 +68,14 @@ class Level():
             platform.rect.x += (shift_x*0.6)
             platform.rect.move_ip((shift_x*0.6), 0)
             platform.update()
-            #if isinstance(platform, MovingPlatform):
-            #     MovingPlatform.update(platform)
-            #elif isinstance(platform, Platform):
-            #    Platform.update(platform)
+        for moving_platform in self.moving_platform_group:
+            moving_platform.rect.x += (shift_x*0.6)
+            moving_platform.rect.move_ip((shift_x*0.6), 0)
+            moving_platform.update()
+        #for enemy in self.enemy_list:
+        #    enemy.rect.x += (shift_x*0.6)
+        #    enemy.rect.move_ip((shift_x*0.6), 0)
+        #    enemy.update()
 
         #reset the world shift so it doesn't infintitely snowball and cause an error
         self.world_shift = 0

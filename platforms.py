@@ -13,7 +13,7 @@ class Platform(pygame.sprite.Sprite):
         self.text = text
         self.font = pygame.font.Font(FONT_NAME, FONT_SIZE)
         self.text_surface = self.font.render(text, True, FONT_COLOR)
-        self.text_surface.set_alpha(280)
+        self.text_surface.set_alpha(255)
 
         self.is_final = is_final
 
@@ -71,7 +71,7 @@ class SlowPlatform(Platform):
     def check_collision(self, player):
         super().check_collision(player)
         if self.rect.colliderect(player.rect):
-            player.velocity.x *= 0.2
+            player.velocity.x += -1
             player.rect.bottom = self.rect.top
             player.on_ground = True
 
