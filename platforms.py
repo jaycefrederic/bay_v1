@@ -98,7 +98,7 @@ class MovingPlatform(pygame.sprite.Sprite):
         
         self.font = pygame.font.Font(FONT_NAME, FONT_SIZE)
         self.text_surface = self.font.render(text, True, FONT_COLOR)
-        self.text_surface.set_alpha(280)
+        self.text_surface.set_alpha(255)
 
         # Create the platform surface
         self.image = pygame.Surface((self.text_surface.get_width(), self.text_surface.get_height()))

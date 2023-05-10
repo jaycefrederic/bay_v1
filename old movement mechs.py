@@ -1,3 +1,9 @@
+class newClass(self, name):
+    def __init__(self, name):
+        self.name = name
+        self.self = self
+        
+    def update():
         self.change_x = 0
         self.change_y = 0
 
