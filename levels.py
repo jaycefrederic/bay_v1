@@ -104,14 +104,14 @@ class Lvl_01(Level):
             BouncyPlatform(910, 500, ".....", False),
             Platform(1010, 400, "much of it belonged to me", False),
             Platform(1260, 550, "but some of it was the work of my idols.", False),
-            MovingPlatform(1645, 550, ".....", [1,0], [1645,550], [1870,550]),
+            MovingPlatform(1645, 550, ".....", False, [1,0], [1645,550], [1870,550]),
             Platform(1900, 550, "poets, mainly. i always wanted to be a poet.", False),
-            MovingPlatform(2335, 550, "i'm not sure", [0, 1], [2335,550], [2335,405]),
+            MovingPlatform(2335, 550, "i'm not sure", False, [0, 1], [2335,550], [2335,405]),
             Platform(2455, 405, "if i ever was", False),
-            MovingPlatform(2605, 405, ".....", [1, 0], [2605,405], [2890,405]),
+            MovingPlatform(2605, 405, ".....", False, [1, 0], [2605,405], [2890,405]),
             Platform(2915, 370, "i'm not sure what became of me at all", False),
             BouncyPlatform(3310, 320, "am i really here?", False),
-            MovingPlatform(3520, 480, "was i ever really here?", [1, 0], [3520,480], [4685,480]),
+            MovingPlatform(3520, 480, "was i ever really here?", False, [1, 0], [3520,480], [4685,480]),
             Platform(4900, 580, "next----->", True)
         ]
 

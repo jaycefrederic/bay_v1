@@ -6,6 +6,7 @@ from constants import DISPLAY_WIDTH, DISPLAY_HEIGHT, FONT_NAME, FONT_COLOR, BLAC
 #create a new class for text platforms
   #btw def init means it's initializing the attributes of the object and setting them to their default values thx chatGPT
 class Platform(pygame.sprite.Sprite):
+    pygame.font.init()
     font = pygame.font.Font(FONT_NAME, FONT_SIZE)
     def __init__(self, x, y, text, is_final):
         super().__init__() #Using `super().__init__()` is a more modular and flexible way to initialize the parent class, as it allows for easier inheritance and customization of the parent class in the future.
@@ -17,6 +18,7 @@ class Platform(pygame.sprite.Sprite):
         
         self.is_final = is_final
         
+        self.passenger = None
         #get image
         self.image = pygame.Surface((self.text_surface.get_width(), self.text_surface.get_height()))
         self.image.blit(self.text_surface, (x,y))
@@ -50,35 +52,36 @@ class MovingPlatform(Platform):
     def __init__(self, x, y, text, is_final, velocity, start, end):
         super().__init__(x, y, text, is_final)
         self.velocity = velocity
-        self.passenger = None
+
         #start and end points
         self.start = start
         self.end = end
+        self.direction = pygame.math.Vector2(0,0)
         #use start and end points to determine direction
-        self.direction.x = 1 if self.end.x > self.start.x else -1
-        self.direction.y = 1 if self.end.y > self.start.y else -1
+        self.direction.x = 1 if self.end[0] > self.start[0] else -1
+        self.direction.y = 1 if self.end[1] > self.start[1] else -1
         
     def update(self):
         #move the platform
-        self.rect.x += self.velocity.x
-        self.rect.y += self.velocity.y
+        self.rect.x += self.velocity[0]
+        self.rect.y += self.velocity[1]
         #check if the platform has reached the end
-        if abs(self.rect.x > self.end.x) or abs(self.rect.x < self.start.x):
-            self.velocity.x *= -1
-        if abs(self.rect.y > self.end.y) or abs(self.rect.y < self.start.y):
-            self.velocity.y *= -1
+        if abs(self.rect.x > self.end[0]) or abs(self.rect.x < self.start[0]):
+            self.velocity[0] *= -1
+        if abs(self.rect.y > self.end[1]) or abs(self.rect.y < self.start[1]):
+            self.velocity[1] *= -1
         #move the passenger with the platform
         if self.passenger:
-            self.passenger.rect.x += self.velocity.x
-            self.passenger.rect.y += self.velocity.y
+            self.passenger.rect.x += self.velocity[0]
+            self.passenger.rect.y += self.velocity[1]
 
 class SlowPlatform(Platform):
     def __init__(self, x, y, text, is_final):
         super().__init__(x, y, text, is_final)
-    
+
     def update(self):
         if self.passenger:
-            self.passenger.velocity.x += -1
+            self.passenger.velocity[0] += -1
             
 class BouncyPlatform(Platform):
     def __init__(self, x, y, text, is_final):
@@ -86,4 +89,4 @@ class BouncyPlatform(Platform):
     
     def update(self):
         if self.passenger:
-            self.passenger.velocity.y += -8
+            self.passenger.velocity[1] += -8
