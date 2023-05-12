@@ -9,8 +9,7 @@ class Level():
 
     def __init__(self, player):
         self.platform_list = pygame.sprite.Group()
-        self.moving_platform_group = pygame.sprite.Group()
-        self.enemy_list = pygame.sprite.Group()
+        #self.enemy_list = pygame.sprite.Group()
         self.player = player
         self.background = None
         self.level_limit = -9200
@@ -18,8 +17,7 @@ class Level():
     
     def update(self):
         self.platform_list.update()
-        self.moving_platform_group.update()
-        self.enemy_list.update()
+        ###self.enemy_list.update()
 
     def draw(self, screen):
         #blit blit blit i still don't know what that means
@@ -27,14 +25,12 @@ class Level():
         screen.blit(self.background, (self.world_shift // 3,0))
         #platforms
         self.platform_list.draw(screen)
-        self.moving_platform_group.draw(screen)
         #enemies, whenever we get around to adding that
-        self.enemy_list.draw(screen)
+        ###self.enemy_list.draw(screen)
         #update each platform before calling shift_world method
         for platform in self.platform_list:
             platform.update()
-        for moving_platform in self.moving_platform_group:
-            moving_platform.update()
+
         self.shift_world(self.world_shift)
 
     def create_level(self, level):
@@ -57,8 +53,6 @@ class Level():
         #idk how this one really works tbh
         for platform in self.platform_list:
             platform.check_collision(self.player)
-        for moving_platform in self.moving_platform_group:
-            moving_platform.check_collision(self.player)
 
     def shift_world(self, shift_x):  # sourcery skip: extract-duplicate-method
         # bc it's actually a side-scroller, we're scrollin
@@ -68,10 +62,7 @@ class Level():
             platform.rect.x += (shift_x*0.6)
             platform.rect.move_ip((shift_x*0.6), 0)
             platform.update()
-        for moving_platform in self.moving_platform_group:
-            moving_platform.rect.x += (shift_x*0.6)
-            moving_platform.rect.move_ip((shift_x*0.6), 0)
-            moving_platform.update()
+
         #for enemy in self.enemy_list:
         #    enemy.rect.x += (shift_x*0.6)
         #    enemy.rect.move_ip((shift_x*0.6), 0)
@@ -93,7 +84,7 @@ class Lvl_01(Level):
         self.level_limit = -4200
 
         self.platform_list = pygame.sprite.Group() #create a sprite group to hold platforms
-        self.moving_platform_group = pygame.sprite.Group()
+
 
         level = [
             Platform(4, 580, "i keep waking up here...", False),
@@ -104,20 +95,18 @@ class Lvl_01(Level):
             BouncyPlatform(910, 500, ".....", False),
             Platform(1010, 400, "much of it belonged to me", False),
             Platform(1260, 550, "but some of it was the work of my idols.", False),
-            MovingPlatform(1645, 550, ".....", False, [1,0], [1645,550], [1870,550]),
+            MovingPlatform(1645, 550, ".....", False, [1645,550], [1870,550]),
             Platform(1900, 550, "poets, mainly. i always wanted to be a poet.", False),
-            MovingPlatform(2335, 550, "i'm not sure", False, [0, 1], [2335,550], [2335,405]),
+            MovingPlatform(2335, 550, "i'm not sure", False, [2335,550], [2335,405]),
             Platform(2455, 405, "if i ever was", False),
-            MovingPlatform(2605, 405, ".....", False, [1, 0], [2605,405], [2890,405]),
+            MovingPlatform(2605, 405, ".....", False, [2605,405], [2890,405]),
             Platform(2915, 370, "i'm not sure what became of me at all", False),
             BouncyPlatform(3310, 320, "am i really here?", False),
-            MovingPlatform(3520, 480, "was i ever really here?", False, [1, 0], [3520,480], [4685,480]),
+            MovingPlatform(3520, 480, "was i ever really here?", False, [3520,480], [4685,480]),
             Platform(4900, 580, "next----->", True)
         ]
 
         #add each platform to platform_list
         for platform in level:
             self.platform_list.add(platform)
-        for moving_platform in level:
-            self.moving_platform_group.add(moving_platform)
             

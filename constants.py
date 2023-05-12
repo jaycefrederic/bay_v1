@@ -34,4 +34,4 @@ GRAVITY = 0.5
 JUMP_SPEED = -10
 
 #platform speed i guess
-PLATFORM_SPEED = 1
+PLATFORM_SPEED = 0.8

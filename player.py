@@ -59,7 +59,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.move_ip(self.velocity)
         
         self.handle_platform_collision()
-        self.handle_moving_platform_collision()
 
         # Keep the player from falling through the bottom of the screen
         if self.rect.bottom > constants.DISPLAY_HEIGHT:
@@ -79,7 +78,7 @@ class Player(pygame.sprite.Sprite):
         """
         
             if isinstance(block, Credit):
-                self.rect.x += block.change_x
+                
                 
         """
     # handle platform collisions
@@ -107,15 +106,12 @@ class Player(pygame.sprite.Sprite):
                 elif self.velocity.x >= 0 and self.rect.right <= platform.rect.left + 10:
                     # set the player's x position to be to the right of the platform
                     self.rect.right = platform.rect.left
-                else: self.on_platform = False
-            
-                    
-    def handle_moving_platform_collision(self):
-        for moving_platform in self.level.moving_platform_group:
-            # Move the player with moving platforms
-            if self.rect.colliderect(moving_platform.rect) and isinstance(moving_platform, MovingPlatform):
-                self.rect.x += moving_platform.velocity.x
-                self.rect.y += moving_platform.velocity.y
+                else: self.on_platform = False        
+                
+                # handle moving platform collisions
+                if isinstance(platform, MovingPlatform):
+                    platform.passenger = self
+                    self.on_platform = True
         
     #movements here
     def jump(self):

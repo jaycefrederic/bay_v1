@@ -47,33 +47,53 @@ class Platform(pygame.sprite.Sprite):
             collision_side = self.rect.collidepoint(player.rect.midbottom)
             if collision_side:
                 self.handle_collision(player)
+            elif player.rect.colliderect(self.rect):
+                self.handle_collision(player)
                 
 class MovingPlatform(Platform):
-    def __init__(self, x, y, text, is_final, velocity, start, end):
+    def __init__(self, x, y, text, is_final, start, end):
         super().__init__(x, y, text, is_final)
-        self.velocity = velocity
+        #self.velocity = pygame.math.Vector2(velocity)
 
-        #start and end points
+        # start and end points
         self.start = start
         self.end = end
-        self.direction = pygame.math.Vector2(0,0)
-        #use start and end points to determine direction
-        self.direction.x = 1 if self.end[0] > self.start[0] else -1
-        self.direction.y = 1 if self.end[1] > self.start[1] else -1
+        self.direction = pygame.math.Vector2(self.end[0] - self.start[0], self.end[1] - self.start[1]).normalize()
+        ###self.direction = pygame.math.Vector2(0, 0) # initialize direction vector
+        # use start and end points to determine actual direction
+        ###self.direction.x = 1 if self.end[0] > self.start[0] else -1
+        ###self.direction.y = 1 if self.end[1] > self.start[1] else -1
         
-    def update(self):
-        #move the platform
-        self.rect.x += self.velocity[0]
-        self.rect.y += self.velocity[1]
-        #check if the platform has reached the end
-        if abs(self.rect.x > self.end[0]) or abs(self.rect.x < self.start[0]):
-            self.velocity[0] *= -1
-        if abs(self.rect.y > self.end[1]) or abs(self.rect.y < self.start[1]):
-            self.velocity[1] *= -1
-        #move the passenger with the platform
+        # initialize tweening variables
+        self.starting_pos = pygame.math.Vector2(self.start[0], self.start[1])
+        self.ending_pos = pygame.math.Vector2(self.end[0], self.end[1])
+        self.current_pos = self.starting_pos # initialize current position
+        
+        self.distance = self.starting_pos - self.ending_pos # initialize distance
+
+            
+    def update(self): # use tweening to move the platform
+        # update distance
+        self.distance = self.current_pos.distance_to(self.ending_pos)
+        # move platform according to distance/direction
+        if self.distance != 0:
+            self.current_pos += self.direction * PLATFORM_SPEED
+        else: # if distance = 0 we reach end of path and reverse
+            self.direction *= -1
+            self.distance = self.starting_pos.distance_to(self.ending_pos)
+        # update distance
+        
+        
+        # update platform position
+        self.rect.x = self.current_pos.x
+        self.rect.y = self.current_pos.y
+        
+        # update passenger position
         if self.passenger:
-            self.passenger.rect.x += self.velocity[0]
-            self.passenger.rect.y += self.velocity[1]
+            self.passenger.rect.bottom = self.rect.top
+            self.passenger.rect.x = self.current_pos.x
+            #self.passenger.rect.x += self.velocity.x
+            #self.passenger.rect.y += self.velocity.y
 
 class SlowPlatform(Platform):
     def __init__(self, x, y, text, is_final):
@@ -81,7 +101,7 @@ class SlowPlatform(Platform):
 
     def update(self):
         if self.passenger:
-            self.passenger.velocity[0] += -1
+            self.passenger.velocity.x -= 1
             
 class BouncyPlatform(Platform):
     def __init__(self, x, y, text, is_final):
@@ -89,4 +109,4 @@ class BouncyPlatform(Platform):
     
     def update(self):
         if self.passenger:
-            self.passenger.velocity[1] += -8
+            self.passenger.velocity.y -= 12

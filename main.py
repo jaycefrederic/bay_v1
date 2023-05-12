@@ -71,16 +71,12 @@ def main():  # sourcery skip: merge-comparisons
         #update platforms
         for platform in current_level.platform_list:
             platform.update()
-        for moving_platform in current_level.moving_platform_group:
-            moving_platform.update()
         #update level
         current_level.update()
         #update screen
         current_level.draw(screen)
         for platform in current_level.platform_list:
             platform.draw(screen)
-        for moving_platform in current_level.moving_platform_group:
-            moving_platform.draw(screen)
         active_sprite_list.draw(screen)
 
         #    player.rect.y = constants.DISPLAY_HEIGHT - player.rect.height - 200
@@ -103,7 +99,7 @@ def main():  # sourcery skip: merge-comparisons
 
         #update platforms again bc plz
         platform.update()
-        moving_platform.update()
+        platforms.MovingPlatform.update(self = platform)
 
         #fps
         clock.tick(30)
