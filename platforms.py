@@ -58,11 +58,7 @@ class MovingPlatform(Platform):
         # start and end points
         self.start = start
         self.end = end
-        self.direction = pygame.math.Vector2(self.end[0] - self.start[0], self.end[1] - self.start[1]).normalize()
-        ###self.direction = pygame.math.Vector2(0, 0) # initialize direction vector
-        # use start and end points to determine actual direction
-        ###self.direction.x = 1 if self.end[0] > self.start[0] else -1
-        ###self.direction.y = 1 if self.end[1] > self.start[1] else -1
+        self.direction = pygame.math.Vector2(self.end[0] - self.start[0], self.end[1] - self.start[1]).normalize() # initialize direction vector
         
         # initialize tweening variables
         self.starting_pos = pygame.math.Vector2(self.start[0], self.start[1])

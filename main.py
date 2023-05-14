@@ -79,7 +79,7 @@ def main():  # sourcery skip: merge-comparisons
             platform.draw(screen)
         active_sprite_list.draw(screen)
 
-        #    player.rect.y = constants.DISPLAY_HEIGHT - player.rect.height - 200
+        # optional reset is   player.rect.y = constants.DISPLAY_HEIGHT - player.rect.height - 200
 
 
         #scrolliollio

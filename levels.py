@@ -27,9 +27,6 @@ class Level():
         self.platform_list.draw(screen)
         #enemies, whenever we get around to adding that
         ###self.enemy_list.draw(screen)
-        #update each platform before calling shift_world method
-        for platform in self.platform_list:
-            platform.update()
 
         self.shift_world(self.world_shift)
 
