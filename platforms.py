@@ -34,62 +34,53 @@ class Platform(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.text_surface, self.rect)
     
-    def handle_collision(self, player):
-            #lands the player on top of the platform
-            player.rect.bottom = self.rect.top
-            player.on_ground = True
-            if issubclass(self, MovingPlatform) or issubclass(self, SlowPlatform) or issubclass(self, BouncyPlatform):
-                self.passenger = player
-        
-    def check_collision(self, player):  # sourcery skip: use-named-expression
-        if self.rect.colliderect(player.rect):
-            #what part of player is touching the platform?
-            collision_side = self.rect.collidepoint(player.rect.midbottom)
-            if collision_side:
-                self.handle_collision(player)
-            elif player.rect.colliderect(self.rect):
-                self.handle_collision(player)
                 
 class MovingPlatform(Platform):
-    def __init__(self, x, y, text, is_final, start, end):
-        super().__init__(x, y, text, is_final)
-        #self.velocity = pygame.math.Vector2(velocity)
-
-        # start and end points
-        self.start = start
-        self.end = end
-        self.direction = pygame.math.Vector2(self.end[0] - self.start[0], self.end[1] - self.start[1]).normalize() # initialize direction vector
+    def __init__(self, x, y, text, is_final, y0, y1, x0, x1):
+        super().__init__(x, y, text, is_final) # initialize parent class
         
-        # initialize tweening variables
-        self.starting_pos = pygame.math.Vector2(self.start[0], self.start[1])
-        self.ending_pos = pygame.math.Vector2(self.end[0], self.end[1])
-        self.current_pos = self.starting_pos # initialize current position
+        # initialize boundary variables
+        self.top_bound = y0 
+        self.bottom_bound = y1 
+        self.left_bound = x0 
+        self.right_bound = x1 
         
-        self.distance = self.starting_pos - self.ending_pos # initialize distance
-
+        
+       # initialize directions
+        if self.top_bound == self.bottom_bound:
+            self.direction = (1, 0) # horizontal
+            # initialize change in position
+            self.change_x = 1
+            self.change_y = 0
+        elif self.left_bound == self.right_bound:
+            self.direction = (0, 1) # vertical
+            # initialize change in position
+            self.change_x = 0
+            self.change_y = 1
+        else:
+            raise ValueError("MovingPlatform init error must be either horizontal or vertical")
             
-    def update(self): # use tweening to move the platform
-        # update distance
-        self.distance = self.current_pos.distance_to(self.ending_pos)
-        # move platform according to distance/direction
-        if self.distance != 0:
-            self.current_pos += self.direction * PLATFORM_SPEED
-        else: # if distance = 0 we reach end of path and reverse
-            self.direction *= -1
-            self.distance = self.starting_pos.distance_to(self.ending_pos)
-        # update distance
-        
-        
-        # update platform position
-        self.rect.x = self.current_pos.x
-        self.rect.y = self.current_pos.y
-        
+
+
+        self.passenger = None # initialize passenger
+            
+    def update(self):
+        if self.direction == (1, 0): # if moving horizontally
+            if self.rect.x >= self.right_bound or self.rect.x <= self.left_bound: # if at boundary
+                self.change_x *= -1 # reverse x direction
+            self.rect.x += self.change_x # update platform position
+        elif self.direction == (0, 1): # if moving vertically
+            if self.rect.y >= self.bottom_bound or self.rect.y <= self.top_bound: # if at boundary
+                self.change_y *= -1 # reverse y direction
+            self.rect.y += self.change_y # update platform position
+        else:
+            raise ValueError("MovingPlatform update method error not horizontal or vertical")
+    
         # update passenger position
         if self.passenger:
-            self.passenger.rect.bottom = self.rect.top
-            self.passenger.rect.x = self.current_pos.x
-            #self.passenger.rect.x += self.velocity.x
-            #self.passenger.rect.y += self.velocity.y
+            self.passenger.rect.x += self.change_x
+            self.passenger.rect.y += self.change_y 
+            
 
 class SlowPlatform(Platform):
     def __init__(self, x, y, text, is_final):

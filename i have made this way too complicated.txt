@@ -1,0 +1,29 @@
+# i have made this way too complicated
+
+# here are my notes:
+
+# for platforms:
+    # don't need to def anything but init
+    # worry bout handling collisions when u get to moving plats and see how it goes
+    
+    def handle_collision(self, player):
+            #lands the player on top of the platform
+            player.rect.bottom = self.rect.top
+            player.on_ground = True
+            if issubclass(self, MovingPlatform) or issubclass(self, SlowPlatform) or issubclass(self, BouncyPlatform):
+                self.passenger = player
+        
+    def check_collision(self, player):  # sourcery skip: use-named-expression
+        if self.rect.colliderect(player.rect):
+            #what part of player is touching the platform?
+            collision_side = self.rect.collidepoint(player.rect.midbottom)
+            if collision_side:
+                self.handle_collision(player)
+            elif player.rect.colliderect(self.rect):
+                self.handle_collision(player)
+                
+                
+                
+    i will need to make a new class for each type of platform
+
+    i will conquer this beast tomorrow

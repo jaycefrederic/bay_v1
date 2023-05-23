@@ -99,7 +99,7 @@ def main():  # sourcery skip: merge-comparisons
 
         #update platforms again bc plz
         platform.update()
-        platforms.MovingPlatform.update(self = platform)
+
 
         #fps
         clock.tick(30)
